@@ -58,3 +58,42 @@ resource "aws_route_table_association" "a_rt_default_crud_subnet_crud_1" {
   subnet_id = aws_subnet.subnet_crud_1.id
   route_table_id = aws_route_table.rt_default_crud.id
 }
+
+resource "aws_security_group" "rds_sg" {
+        name = "rds_security_group"
+        description = "Security group for RDS instance"
+        vpc_id = aws_vpc.vpc_crud.id
+ 
+        ingress {
+            from_port   = 80
+            to_port     = 80
+            protocol    = "tcp"
+            cidr_blocks = ["0.0.0.0/0"]
+
+        }
+
+        ingress {
+            from_port = 3306
+            to_port = 3306
+            protocol = "tcp"
+            cidr_blocks = ["0.0.0.0/0"]
+            description = "Permite acceso puerto 3306"
+        }
+
+        ingress {
+            from_port = 22
+            to_port = 22
+            protocol = "tcp"
+            cidr_blocks = ["0.0.0.0/0"]
+            description = "Permite acceso puerto 22"
+
+        }
+
+        egress {
+            from_port = 0
+            to_port = 0
+            protocol = "-1"
+            cidr_blocks = ["0.0.0.0/0"]
+            description = "permite salida a cualquier ip y puerto"
+        }
+    }
